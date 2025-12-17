@@ -16,3 +16,12 @@ La aplicación está diseñada para usarse principalmente en **dispositivos móv
 - Diseño **mobile-first**
 
 ---
+
+## 📦 Scripts disponibles
+
+```bash
+# Instalar dependencias
+npm install
+
+# Ejecutar en modo desarrollo
+npm run dev

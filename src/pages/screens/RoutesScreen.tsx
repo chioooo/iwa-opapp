@@ -22,12 +22,12 @@ export const RoutesScreen: React.FC<RoutesScreenProps> = ({ onNavigate }) => {
       onProfileClick={() => onNavigate('profile')}
     >
       <div className="p-6">
-        <div className="max-w-[390px] mx-auto">
+        <div className="max-w-[390px] sm:max-w-full mx-auto">
           <h2 className="text-gray-800 mb-4" style={{ fontSize: '20px', fontWeight: '700' }}>
             Rutas del día
           </h2>
 
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {routes.map((route) => (
               <div
                 key={route.id}

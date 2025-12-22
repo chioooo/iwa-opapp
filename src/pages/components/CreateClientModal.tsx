@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
-import { X } from 'lucide-react';
-import { motion, AnimatePresence } from 'motion/react';
-import { Input } from './Input';
-import { Button } from './Button';
+import React, {useState} from 'react';
+import {X} from 'lucide-react';
+import {motion, AnimatePresence} from 'motion/react';
+import {Input} from './Input';
+import {Button} from './Button';
 
 interface CreateClientModalProps {
     isOpen: boolean;
@@ -33,13 +33,13 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({
 
     const [errors, setErrors] = useState<Partial<Record<keyof NewClientData, string>>>({});
 
-    const routes = ['Ruta 1', 'Ruta 2', 'Ruta 3', 'Ruta 4', 'Ruta 5'];
+    const routes = ['Ruta Centro', 'Ruta Norte', 'Ruta Sur', 'Ruta Este', 'Ruta Oeste'];
 
     const handleInputChange = (field: keyof NewClientData, value: string) => {
-        setFormData((prev) => ({ ...prev, [field]: value }));
+        setFormData((prev) => ({...prev, [field]: value}));
         // Limpiar error al escribir
         if (errors[field]) {
-            setErrors((prev) => ({ ...prev, [field]: '' }));
+            setErrors((prev) => ({...prev, [field]: ''}));
         }
     };
 
@@ -96,34 +96,35 @@ export const CreateClientModal: React.FC<CreateClientModalProps> = ({
                 <>
                     {/* Overlay */}
                     <motion.div
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.2 }}
+                        initial={{opacity: 0}}
+                        animate={{opacity: 1}}
+                        exit={{opacity: 0}}
+                        transition={{duration: 0.2}}
                         className="fixed inset-0 bg-black/50 z-50 backdrop-blur-sm"
                         onClick={handleClose}
                     />
 
                     {/* Modal */}
                     <motion.div
-                        initial={{ opacity: 0, scale: 0.95, y: 20 }}
-                        animate={{ opacity: 1, scale: 1, y: 0 }}
-                        exit={{ opacity: 0, scale: 0.95, y: 20 }}
-                        transition={{ duration: 0.25, ease: 'easeOut' }}
+                        initial={{opacity: 0, scale: 0.95, y: 20}}
+                        animate={{opacity: 1, scale: 1, y: 0}}
+                        exit={{opacity: 0, scale: 0.95, y: 20}}
+                        transition={{duration: 0.25, ease: 'easeOut'}}
                         className="fixed inset-0 z-50 flex items-center justify-center p-4"
                         onClick={(e) => e.target === e.currentTarget && handleClose()}
                     >
-                        <div className="bg-white rounded-2xl shadow-2xl w-full max-w-[390px] max-h-[90vh] flex flex-col">
+                        <div
+                            className="bg-white rounded-2xl shadow-2xl w-full max-w-[390px] max-h-[90vh] flex flex-col">
                             {/* Header */}
                             <div className="flex items-center justify-between p-6 pb-4 border-b border-gray-200">
-                                <h2 className="text-gray-800" style={{ fontSize: '20px', fontWeight: '700' }}>
+                                <h2 className="text-gray-800" style={{fontSize: '20px', fontWeight: '700'}}>
                                     Nuevo cliente
                                 </h2>
                                 <button
                                     onClick={handleClose}
                                     className="w-10 h-10 flex items-center justify-center rounded-full bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors active:scale-95"
                                 >
-                                    <X className="w-5 h-5" />
+                                    <X className="w-5 h-5"/>
                                 </button>
                             </div>
 

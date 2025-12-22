@@ -7,12 +7,7 @@ interface MetricCardProps {
     color: string;
 }
 
-export const MetricCard: React.FC<MetricCardProps> = ({
-                                                          title,
-                                                          value,
-                                                          icon: Icon,
-                                                          color,
-                                                      }) => {
+export const MetricCard: React.FC<MetricCardProps> = ({ title, value, icon: Icon, color }) => {
     return (
         <div className="bg-white rounded-2xl shadow-md p-6 flex items-center gap-4 transition-transform active:scale-[0.98]">
             <div

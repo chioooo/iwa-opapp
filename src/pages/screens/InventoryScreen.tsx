@@ -37,7 +37,7 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({ onNavigate }) 
       onProfileClick={() => onNavigate('profile')}
     >
       <div className="p-6">
-        <div className="max-w-[390px] mx-auto">
+        <div className="max-w-[390px] sm:max-w-full mx-auto">
           {/* Búsqueda */}
           <div className="mb-6">
             <div className="relative">
@@ -53,7 +53,7 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({ onNavigate }) 
           </div>
 
           {/* Lista de productos */}
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             {filteredProducts.map((product) => {
               const stockStatus = getStockStatus(product.stock);
 

@@ -42,42 +42,44 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange, onV
   const canAdvanceStatus = order.status === 'pending' || order.status === 'confirmed';
 
   return (
-    <div className="bg-white rounded-2xl shadow-md p-4 transition-transform active:scale-[0.98]">
-      <div className="flex items-start justify-between mb-3">
+    <div className="bg-white rounded-2xl landscape:rounded-xl shadow-md p-4 landscape:p-3 transition-transform active:scale-[0.98]">
+      <div className="flex items-start justify-between mb-2 landscape:mb-1">
         <div className="flex-1 min-w-0">
-          <h3 className="text-gray-800 font-semibold truncate">{order.clientName}</h3>
-          <div className="flex items-center gap-2 text-sm text-gray-500 mt-1">
-            <Calendar className="w-4 h-4" />
+          <h3 className="text-gray-800 font-semibold truncate text-sm landscape:text-xs">{order.clientName}</h3>
+          <div className="flex items-center gap-1 text-xs text-gray-500 mt-0.5">
+            <Calendar className="w-3 h-3" />
             <span>{formattedDate}</span>
           </div>
         </div>
-        <span className={`px-3 py-1 rounded-full text-xs font-semibold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
+        <span className={`px-2 py-0.5 rounded-full text-[10px] landscape:text-[9px] font-semibold ${statusConfig.bgColor} ${statusConfig.textColor}`}>
           {statusConfig.label}
         </span>
       </div>
 
-      <div className="flex items-center gap-2 text-sm text-gray-500 mb-3">
-        <Clock className="w-4 h-4" />
+      <div className="flex items-center gap-1 text-xs text-gray-500 mb-2 landscape:mb-1">
+        <Clock className="w-3 h-3" />
         <span>{order.items.length} producto{order.items.length !== 1 ? 's' : ''}</span>
       </div>
 
-      {order.items.slice(0, 2).map(item => (
-        <div key={item.productId} className="flex justify-between text-sm text-gray-600 mb-1">
-          <span>{item.quantity}x {item.productName}</span>
-          <span>${(item.quantity * item.unitPrice).toFixed(2)}</span>
-        </div>
-      ))}
-      {order.items.length > 2 && (
-        <p className="text-sm text-gray-400">+{order.items.length - 2} más...</p>
-      )}
+      <div className="landscape:hidden">
+        {order.items.slice(0, 2).map(item => (
+          <div key={item.productId} className="flex justify-between text-xs text-gray-600 mb-0.5">
+            <span>{item.quantity}x {item.productName}</span>
+            <span>${(item.quantity * item.unitPrice).toFixed(2)}</span>
+          </div>
+        ))}
+        {order.items.length > 2 && (
+          <p className="text-xs text-gray-400">+{order.items.length - 2} más...</p>
+        )}
+      </div>
 
-      <div className="flex items-center justify-between pt-3 mt-3 border-t border-gray-100">
-        <span className="text-xl font-bold text-gray-800">${order.totalAmount.toFixed(2)}</span>
-        <div className="flex gap-2">
+      <div className="flex items-center justify-between pt-2 landscape:pt-1 mt-2 landscape:mt-1 border-t border-gray-100">
+        <span className="text-lg landscape:text-base font-bold text-gray-800">${order.totalAmount.toFixed(2)}</span>
+        <div className="flex gap-1">
           {canAdvanceStatus && onStatusChange && (
             <button
               onClick={handleNextStatus}
-              className="px-4 py-2 bg-[var(--color-primary)] text-white rounded-lg text-sm font-semibold transition-transform active:scale-95"
+              className="px-3 landscape:px-2 py-1.5 landscape:py-1 bg-[var(--color-primary)] text-white rounded-lg text-xs font-semibold transition-transform active:scale-95"
             >
               {order.status === 'pending' ? 'Confirmar' : 'Entregar'}
             </button>
@@ -85,9 +87,9 @@ export const OrderCard: React.FC<OrderCardProps> = ({ order, onStatusChange, onV
           {onViewDetails && (
             <button
               onClick={() => onViewDetails(order)}
-              className="p-2 bg-gray-100 text-gray-600 rounded-lg transition-transform active:scale-95"
+              className="p-1.5 landscape:p-1 bg-gray-100 text-gray-600 rounded-lg transition-transform active:scale-95"
             >
-              <ChevronRight className="w-5 h-5" />
+              <ChevronRight className="w-4 h-4 landscape:w-3 landscape:h-3" />
             </button>
           )}
         </div>

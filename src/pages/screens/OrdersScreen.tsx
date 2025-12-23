@@ -30,84 +30,97 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({ onNavigate }) => {
       activeScreen="orders"
       onNavigate={onNavigate}
     >
-      <div className="p-6">
-        <div className="max-w-[390px] mx-auto">
-          {/* Resumen */}
-          <div className="bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] rounded-2xl shadow-lg p-6 mb-6 text-white">
-            <div className="flex items-center gap-2 mb-4">
-              <ClipboardList className="w-6 h-6" />
-              <h2 style={{ fontSize: '16px', fontWeight: '600' }}>Resumen de pedidos</h2>
+      <div className="p-4 sm:p-6 landscape:py-2">
+        <div className="max-w-[390px] landscape:max-w-full mx-auto landscape:flex landscape:flex-row landscape:gap-4 landscape:items-start">
+          {/* Panel izquierdo en landscape: Resumen + Métricas */}
+          <div className="landscape:w-1/3 landscape:flex-shrink-0">
+            {/* Resumen */}
+            <div className="bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] rounded-2xl shadow-lg p-4 sm:p-6 mb-4 landscape:mb-3 text-white">
+              <div className="flex items-center gap-2 mb-2 landscape:mb-1">
+                <ClipboardList className="w-5 h-5 landscape:w-4 landscape:h-4" />
+                <h2 className="text-sm sm:text-base font-semibold">Resumen de pedidos</h2>
+              </div>
+              <div className="flex items-baseline gap-2 mb-1">
+                <span className="text-2xl sm:text-4xl landscape:text-2xl font-bold">
+                  {summary?.totalOrders || 0}
+                </span>
+                <span className="text-white/80 text-xs sm:text-sm">pedidos totales</span>
+              </div>
+              <div className="flex items-center gap-1 text-xs sm:text-sm text-white/90">
+                <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span>${(summary?.totalAmount || 0).toFixed(2)} en ventas</span>
+              </div>
             </div>
-            <div className="flex items-baseline gap-2 mb-2">
-              <span style={{ fontSize: '36px', fontWeight: '700' }}>
-                {summary?.totalOrders || 0}
-              </span>
-              <span className="text-white/80 text-sm">pedidos totales</span>
+
+            {/* Métricas rápidas */}
+            <div className="grid grid-cols-2 gap-3 mb-4 landscape:mb-3">
+              <div className="bg-white rounded-xl shadow-md p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Clock className="w-4 h-4 sm:w-5 sm:h-5 text-yellow-500" />
+                  <span className="text-xs sm:text-sm text-gray-500">Pendientes</span>
+                </div>
+                <p className="text-gray-800 text-xl sm:text-2xl font-bold">
+                  {summary?.pendingOrders || 0}
+                </p>
+              </div>
+              <div className="bg-white rounded-xl shadow-md p-3 sm:p-4">
+                <div className="flex items-center gap-2 mb-1">
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5 text-[var(--color-secondary)]" />
+                  <span className="text-xs sm:text-sm text-gray-500">Confirmados</span>
+                </div>
+                <p className="text-gray-800 text-xl sm:text-2xl font-bold">
+                  {summary?.confirmedOrders || 0}
+                </p>
+              </div>
             </div>
-            <div className="flex items-center gap-1 text-sm text-white/90">
-              <TrendingUp className="w-4 h-4" />
-              <span>${(summary?.totalAmount || 0).toFixed(2)} en ventas</span>
-            </div>
+
+            {/* Botón nuevo pedido - visible en landscape en panel izquierdo */}
+            <button
+              onClick={() => setShowNewOrderModal(true)}
+              className="hidden landscape:flex w-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-3 rounded-xl shadow-lg transition-transform active:scale-[0.98] items-center justify-center gap-2 text-sm font-semibold"
+            >
+              <Plus className="w-4 h-4" />
+              Nuevo pedido
+            </button>
           </div>
 
-          {/* Métricas rápidas */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
-            <div className="bg-white rounded-xl shadow-md p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Clock className="w-5 h-5 text-yellow-500" />
-                <span className="text-sm text-gray-500">Pendientes</span>
-              </div>
-              <p className="text-gray-800" style={{ fontSize: '24px', fontWeight: '700' }}>
-                {summary?.pendingOrders || 0}
-              </p>
+          {/* Panel derecho en landscape: Lista de pedidos */}
+          <div className="landscape:flex-1 landscape:overflow-y-auto landscape:max-h-[calc(100vh-140px)]">
+            <div className="mb-4 landscape:mb-2">
+              <h3 className="text-gray-800 mb-3 text-base sm:text-lg font-semibold">
+                Pedidos recientes
+              </h3>
+              
+              {loading ? (
+                <div className="text-center py-6 text-gray-500">Cargando...</div>
+              ) : orders.length === 0 ? (
+                <div className="text-center py-6">
+                  <ClipboardList className="w-10 h-10 text-gray-300 mx-auto mb-2" />
+                  <p className="text-gray-500 text-sm">No hay pedidos registrados</p>
+                  <p className="text-xs text-gray-400">Crea tu primer pedido</p>
+                </div>
+              ) : (
+                <div className="space-y-3 landscape:space-y-2 landscape:grid landscape:grid-cols-2 landscape:gap-3 landscape:space-y-0">
+                  {orders.map((order) => (
+                    <OrderCard
+                      key={order.id}
+                      order={order}
+                      onStatusChange={handleStatusChange}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-            <div className="bg-white rounded-xl shadow-md p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <Calendar className="w-5 h-5 text-[var(--color-secondary)]" />
-                <span className="text-sm text-gray-500">Confirmados</span>
-              </div>
-              <p className="text-gray-800" style={{ fontSize: '24px', fontWeight: '700' }}>
-                {summary?.confirmedOrders || 0}
-              </p>
-            </div>
-          </div>
 
-          {/* Lista de pedidos */}
-          <div className="mb-4">
-            <h3 className="text-gray-800 mb-4" style={{ fontSize: '18px', fontWeight: '600' }}>
-              Pedidos recientes
-            </h3>
-            
-            {loading ? (
-              <div className="text-center py-8 text-gray-500">Cargando...</div>
-            ) : orders.length === 0 ? (
-              <div className="text-center py-8">
-                <ClipboardList className="w-12 h-12 text-gray-300 mx-auto mb-3" />
-                <p className="text-gray-500">No hay pedidos registrados</p>
-                <p className="text-sm text-gray-400">Crea tu primer pedido</p>
-              </div>
-            ) : (
-              <div className="space-y-3">
-                {orders.map((order) => (
-                  <OrderCard
-                    key={order.id}
-                    order={order}
-                    onStatusChange={handleStatusChange}
-                  />
-                ))}
-              </div>
-            )}
+            {/* Botón nuevo pedido - solo visible en portrait */}
+            <button
+              onClick={() => setShowNewOrderModal(true)}
+              className="landscape:hidden w-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-4 rounded-xl shadow-lg transition-transform active:scale-[0.98] flex items-center justify-center gap-2 text-base font-semibold"
+            >
+              <Plus className="w-5 h-5" />
+              Nuevo pedido
+            </button>
           </div>
-
-          {/* Botón nuevo pedido */}
-          <button
-            onClick={() => setShowNewOrderModal(true)}
-            className="w-full bg-gradient-to-r from-[var(--color-primary)] to-[var(--color-secondary)] text-white py-4 rounded-xl shadow-lg transition-transform active:scale-[0.98] flex items-center justify-center gap-2"
-            style={{ fontSize: '16px', fontWeight: '600' }}
-          >
-            <Plus className="w-5 h-5" />
-            Nuevo pedido
-          </button>
         </div>
       </div>
 

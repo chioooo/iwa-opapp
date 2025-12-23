@@ -34,7 +34,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
       onProfileClick={() => onNavigate('profile')}
     >
       <div className="p-6">
-        <div className="max-w-[390px] mx-auto">
+        <div className="max-w-[390px] sm:max-w-full mx-auto">
           {/* Saludo */}
           <div className="mb-6">
             <h2 className="text-gray-800 mb-1" style={{ fontSize: '24px', fontWeight: '700' }}>
@@ -46,7 +46,7 @@ export const DashboardScreen: React.FC<DashboardScreenProps> = ({ onNavigate }) 
           </div>
 
           {/* Métricas */}
-          <div className="space-y-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
             <MetricCard
               title="Clientes a visitar"
               value="12"

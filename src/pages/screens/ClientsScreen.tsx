@@ -51,7 +51,7 @@ export const ClientsScreen: React.FC<ClientsScreenProps> = ({ onNavigate }) => {
           onNavigate={onNavigate}
       >
         <div className="p-6">
-          <div className="max-w-[390px] mx-auto">
+          <div className="max-w-[390px] sm:max-w-full mx-auto">
             {/* Búsqueda */}
             <div className="mb-6">
               <div className="relative">
@@ -67,7 +67,7 @@ export const ClientsScreen: React.FC<ClientsScreenProps> = ({ onNavigate }) => {
             </div>
 
             {/* Lista de clientes */}
-            <div className="space-y-2">
+            <div className="space-y-2 grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {filteredClients.map((client) => (
                   <div
                       key={client.id}

@@ -5,11 +5,11 @@ import { DashboardScreen } from './pages/screens/DashboardScreen';
 import { RoutesScreen } from './pages/screens/RoutesScreen';
 import { ClientsScreen } from './pages/screens/ClientsScreen';
 import { InventoryScreen } from './pages/screens/InventoryScreen';
-import { SalesScreen } from './pages/screens/SalesScreen';
+import { OrdersScreen } from './pages/screens/OrdersScreen';
 import { ProfileScreen } from './pages/screens/ProfileScreen';
 import type {NavScreen} from './pages/components/BottomNav';
 
-type Screen = 'login' | 'sync' | 'dashboard' | 'routes' | 'clients' | 'inventory' | 'sales' | 'profile';
+type Screen = 'login' | 'sync' | 'dashboard' | 'routes' | 'clients' | 'inventory' | 'orders' | 'profile';
 
 export default function App() {
     const [currentScreen, setCurrentScreen] = useState<Screen>('login');
@@ -42,7 +42,7 @@ export default function App() {
             {currentScreen === 'routes' && <RoutesScreen onNavigate={handleNavigate} />}
             {currentScreen === 'clients' && <ClientsScreen onNavigate={handleNavigate} />}
             {currentScreen === 'inventory' && <InventoryScreen onNavigate={handleNavigate} />}
-            {currentScreen === 'sales' && <SalesScreen onNavigate={handleNavigate} />}
+            {currentScreen === 'orders' && <OrdersScreen onNavigate={handleNavigate} />}
             {currentScreen === 'profile' && <ProfileScreen onBack={handleBackFromProfile} onLogout={handleLogout} />}
         </>
     );

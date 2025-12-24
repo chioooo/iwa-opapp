@@ -22,10 +22,10 @@ export const SalesScreen: React.FC<SalesScreenProps> = ({ onNavigate }) => {
       onProfileClick={() => onNavigate('profile')}
     >
       <div className="p-6">
-        <div className="max-w-[390px] mx-auto">
+        <div className="max-w-[390px] sm:max-w-full mx-auto">
           {/* Resumen del día */}
           <div className="bg-gradient-to-br from-[var(--color-primary)] to-[var(--color-primary-dark)] rounded-2xl shadow-lg p-6 mb-6 text-white">
-            <div className="flex items-center gap-2 mb-4">
+            <div className="flex items-center gap-2 mb-3 sm:mb-4">
               <DollarSign className="w-6 h-6" />
               <h2 style={{ fontSize: '16px', fontWeight: '600' }}>Resumen del día</h2>
             </div>
@@ -40,7 +40,7 @@ export const SalesScreen: React.FC<SalesScreenProps> = ({ onNavigate }) => {
           </div>
 
           {/* Métricas rápidas */}
-          <div className="grid grid-cols-2 gap-4 mb-6">
+          <div className="grid grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6">
             <div className="bg-white rounded-xl shadow-md p-4">
               <div className="flex items-center gap-2 mb-2">
                 <FileText className="w-5 h-5 text-[var(--color-tertiary)]" />
@@ -62,7 +62,7 @@ export const SalesScreen: React.FC<SalesScreenProps> = ({ onNavigate }) => {
             <h3 className="text-gray-800 mb-4" style={{ fontSize: '18px', fontWeight: '600' }}>
               Ventas recientes
             </h3>
-            <div className="space-y-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 sm:gap-4">
               {recentSales.map((sale) => (
                 <div
                   key={sale.id}

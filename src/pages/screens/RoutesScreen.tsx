@@ -75,7 +75,7 @@ export const RoutesScreen: React.FC<RoutesScreenProps> = ({ onNavigate }) => {
       onNavigate={onNavigate}
     >
       <div className="p-6">
-        <div className="max-w-[390px] mx-auto">
+        <div className="max-w-[390px] sm:max-w-full mx-auto">
           {/* Ruta de hoy */}
           <h2 className="text-gray-800 mb-4" style={{ fontSize: '20px', fontWeight: '700' }}>
             Ruta de hoy

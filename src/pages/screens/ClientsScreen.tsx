@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { ScreenContainer } from '../components/ScreenContainer';
 import type {NavScreen} from '../components/BottomNav';
 import { Search, MapPin, Phone } from 'lucide-react';
+import { ClientDetailModal, type Client, type ClientStatus } from '../components/ClientDetailModal';
+import { ClientActionsModal } from '../components/ClientActionsModal';
 
 interface ClientsScreenProps {
   onNavigate: (screen: NavScreen | 'profile') => void;
@@ -9,13 +11,63 @@ interface ClientsScreenProps {
 
 export const ClientsScreen: React.FC<ClientsScreenProps> = ({ onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedClient, setSelectedClient] = useState<Client | null>(null);
+  const [isDetailModalOpen, setIsDetailModalOpen] = useState(false);
+  const [isActionsModalOpen, setIsActionsModalOpen] = useState(false);
 
-  const clients = [
-    { id: 1, name: 'Abarrotes La Esquina', address: 'Av. Principal 123', phone: '555-0101', status: 'pending' },
-    { id: 2, name: 'Supermercado El Ahorro', address: 'Calle 5 de Mayo 456', phone: '555-0102', status: 'visited' },
-    { id: 3, name: 'Tienda Doña María', address: 'Colonia Centro 789', phone: '555-0103', status: 'pending' },
-    { id: 4, name: 'Minisuper Los Ángeles', address: 'Av. Revolución 321', phone: '555-0104', status: 'visited' },
-  ];
+  const [clients, setClients] = useState<Client[]>([
+    { id: 1, name: 'Abarrotes La Esquina', address: 'Av. Principal 123', phone: '555-0101', status: 'pending', notes: [] },
+    { id: 2, name: 'Supermercado El Ahorro', address: 'Calle 5 de Mayo 456', phone: '555-0102', status: 'active', notes: [] },
+    { id: 3, name: 'Tienda Doña María', address: 'Colonia Centro 789', phone: '555-0103', status: 'vip', notes: [] },
+    { id: 4, name: 'Minisuper Los Ángeles', address: 'Av. Revolución 321', phone: '555-0104', status: 'inactive', notes: [] },
+  ]);
+
+  const getStatusConfig = (status: ClientStatus) => {
+    const configs = {
+      pending: { label: 'Pendiente', bgBadge: 'bg-orange-100 text-orange-700' },
+      active: { label: 'Activo', bgBadge: 'bg-green-100 text-green-700' },
+      inactive: { label: 'Inactivo', bgBadge: 'bg-gray-200 text-gray-600' },
+      vip: { label: 'VIP', bgBadge: 'bg-purple-100 text-purple-700' },
+    };
+    return configs[status];
+  };
+
+  const handleOpenActions = (client: Client) => {
+    setSelectedClient(client);
+    setIsActionsModalOpen(true);
+  };
+
+  const handleCloseDetailModal = () => {
+    setIsDetailModalOpen(false);
+    setSelectedClient(null);
+  };
+
+  const handleCloseActionsModal = () => {
+    setIsActionsModalOpen(false);
+    // Only clear selectedClient if detail modal is not opening
+    if (!isDetailModalOpen) {
+      setSelectedClient(null);
+    }
+  };
+
+  const handleClientAction = (action: 'order' | 'collect' | 'deliver' | 'details', client: Client) => {
+    setIsActionsModalOpen(false);
+    if (action === 'details') {
+      setSelectedClient(client);
+      setIsDetailModalOpen(true);
+      return;
+    }
+    // TODO: Implement other action handlers
+    console.log(`Action: ${action} for client:`, client.name);
+    setSelectedClient(null);
+  };
+
+  const handleSaveClient = (updatedClient: Client) => {
+    setClients((prev) =>
+      prev.map((c) => (c.id === updatedClient.id ? updatedClient : c))
+    );
+    setSelectedClient(updatedClient);
+  };
 
   const filteredClients = clients.filter(client =>
     client.name.toLowerCase().includes(searchQuery.toLowerCase())
@@ -26,7 +78,6 @@ export const ClientsScreen: React.FC<ClientsScreenProps> = ({ onNavigate }) => {
       title="Clientes"
       activeScreen="clients"
       onNavigate={onNavigate}
-      onProfileClick={() => onNavigate('profile')}
     >
       <div className="p-6">
         <div className="max-w-[390px] sm:max-w-full mx-auto">
@@ -66,30 +117,40 @@ export const ClientsScreen: React.FC<ClientsScreenProps> = ({ onNavigate }) => {
                     </div>
                   </div>
                   <span
-                    className={`px-3 py-1 rounded-full text-xs ${
-                      client.status === 'visited' 
-                        ? 'bg-green-100 text-green-700' 
-                        : 'bg-orange-100 text-orange-700'
-                    }`}
+                    className={`px-3 py-1 rounded-full text-xs ${getStatusConfig(client.status).bgBadge}`}
                     style={{ fontWeight: '600' }}
                   >
-                    {client.status === 'visited' ? 'Visitado' : 'Pendiente'}
+                    {getStatusConfig(client.status).label}
                   </span>
                 </div>
 
-                <div className="flex gap-2">
-                  <button className="flex-1 bg-[var(--color-primary)] text-white py-2 rounded-lg text-sm transition-transform active:scale-95" style={{ fontWeight: '600' }}>
-                    Ver detalles
-                  </button>
-                  <button className="px-4 bg-gray-100 text-gray-700 py-2 rounded-lg text-sm transition-transform active:scale-95" style={{ fontWeight: '600' }}>
-                    Llamar
-                  </button>
-                </div>
+                <button
+                  onClick={() => handleOpenActions(client)}
+                  className="w-full bg-[var(--color-primary)] text-white py-2.5 rounded-lg text-sm transition-transform active:scale-95"
+                  style={{ fontWeight: '600' }}
+                >
+                  Acciones
+                </button>
               </div>
             ))}
           </div>
         </div>
       </div>
+
+      <ClientDetailModal
+        client={selectedClient}
+        isOpen={isDetailModalOpen}
+        onClose={handleCloseDetailModal}
+        onSave={handleSaveClient}
+      />
+
+      <ClientActionsModal
+        client={selectedClient}
+        isOpen={isActionsModalOpen}
+        onClose={handleCloseActionsModal}
+        onSaveNotes={handleSaveClient}
+        onAction={handleClientAction}
+      />
     </ScreenContainer>
   );
 };

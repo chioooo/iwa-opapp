@@ -22,7 +22,7 @@ export function useOrders() {
       setOrders(ordersData);
       setSummary(summaryData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar pedidos');
+      setError(err instanceof Error ? err.message : 'No se pudieron cargar los pedidos. Verifica tu conexión o inténtalo de nuevo más tarde.');
     } finally {
       setLoading(false);
     }

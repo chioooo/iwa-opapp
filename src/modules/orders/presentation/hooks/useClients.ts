@@ -16,7 +16,11 @@ export function useClients() {
       const clientsData = await clientRepository.getAll();
       setClients(clientsData);
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Error al cargar clientes');
+      setError(
+        err instanceof Error
+          ? err.message
+          : 'No se pudieron cargar los clientes. Intenta nuevamente.'
+      );
     } finally {
       setLoading(false);
     }

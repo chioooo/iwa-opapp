@@ -30,8 +30,9 @@ export class OrderService implements IOrderService {
   }
 
   async createOrder(dto: CreateOrderDTO): Promise<Order> {
-    if (!dto.items || dto.items.length === 0) {
-      throw new Error('El pedido debe tener al menos un producto');
+    const itemCount = dto.items ? dto.items.length : 0;
+    if (itemCount === 0) {
+      throw new Error(`El pedido debe tener al menos un producto (recibido: ${itemCount})`);
     }
     if (!dto.clientId) {
       throw new Error('Debe seleccionar un cliente');

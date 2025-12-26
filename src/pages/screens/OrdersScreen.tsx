@@ -20,7 +20,7 @@ export const OrdersScreen: React.FC<OrdersScreenProps> = ({ onNavigate }) => {
     try {
       await updateOrderStatus(id, status);
     } catch (error) {
-      console.error('Error updating status:', error);
+      console.error(`Error updating status for order ${id} to ${status}:`, error);
     }
   };
 

@@ -1,7 +1,7 @@
 import React from 'react';
-import { Home, MapPin, Users, Package, DollarSign } from 'lucide-react';
+import { Home, MapPin, Users, Package, ClipboardList } from 'lucide-react';
 
-export type NavScreen = 'dashboard' | 'routes' | 'clients' | 'inventory' | 'sales';
+export type NavScreen = 'dashboard' | 'routes' | 'clients' | 'inventory' | 'orders';
 
 interface BottomNavProps {
   activeScreen: NavScreen;
@@ -14,7 +14,7 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeScreen, onNavigate }
     { id: 'routes' as NavScreen, label: 'Rutas', icon: MapPin },
     { id: 'clients' as NavScreen, label: 'Clientes', icon: Users },
     { id: 'inventory' as NavScreen, label: 'Inventario', icon: Package },
-    { id: 'sales' as NavScreen, label: 'Ventas', icon: DollarSign },
+    { id: 'orders' as NavScreen, label: 'Pedidos', icon: ClipboardList },
   ];
 
   return (

@@ -21,7 +21,7 @@ export interface IProductService {
   searchProducts(query: string, location?: InventoryLocation): Promise<Product[]>;
   createProduct(dto: CreateProductDTO): Promise<Product>;
   updateProduct(id: string, dto: UpdateProductDTO): Promise<Product | null>;
-  updateStock(id: string, quantity: number): Promise<Product | null>;
+  updateStock(id: string, quantity: number, location?: InventoryLocation): Promise<Product | null>;
   deleteProduct(id: string): Promise<boolean>;
   getInventorySummary(): Promise<InventorySummary>;
   getStockStatus(stock: number): StockStatus;

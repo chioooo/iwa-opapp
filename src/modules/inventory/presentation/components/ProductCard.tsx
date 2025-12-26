@@ -1,10 +1,11 @@
 import React from 'react';
 import { Package } from 'lucide-react';
-import type { Product, StockStatus } from '../../domain/entities';
+import type { Product, StockStatus, InventoryLocation } from '../../domain/entities';
 
 interface ProductCardProps {
   product: Product;
   stockStatus: StockStatus;
+  location: InventoryLocation;
   onEdit?: (product: Product) => void;
   onDelete?: (id: string) => void;
 }
@@ -22,10 +23,13 @@ const STOCK_STATUS_CONFIG: Record<StockStatus, { label: string; color: string }>
 export const ProductCard: React.FC<ProductCardProps> = ({
   product,
   stockStatus,
+  location,
   onEdit,
   onDelete,
 }) => {
   const statusConfig = STOCK_STATUS_CONFIG[stockStatus];
+  const currentStock = location === 'route' ? product.stockRoute : product.stockWarehouse;
+  const stockLabel = location === 'route' ? 'En Ruta' : 'En Bodega';
 
   return (
     <div className="bg-white rounded-2xl shadow-md p-4">
@@ -56,9 +60,9 @@ export const ProductCard: React.FC<ProductCardProps> = ({
           </p>
         </div>
         <div className="text-right">
-          <p className="text-xs text-gray-500 mb-1">Stock</p>
+          <p className="text-xs text-gray-500 mb-1">{stockLabel}</p>
           <p className="text-gray-800" style={{ fontSize: '18px', fontWeight: '700' }}>
-            {product.stock}
+            {currentStock}
           </p>
         </div>
       </div>

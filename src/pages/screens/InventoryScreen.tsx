@@ -69,7 +69,8 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({ onNavigate }) 
                 <ProductCard
                   key={product.id}
                   product={product}
-                  stockStatus={getStockStatus(product.stock)}
+                  stockStatus={getStockStatus(product, activeTab)}
+                  location={activeTab}
                 />
               ))}
             </div>

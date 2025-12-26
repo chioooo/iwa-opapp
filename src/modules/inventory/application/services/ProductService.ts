@@ -46,9 +46,14 @@ export class ProductService implements IProductService {
         : await this.productRepository.getAll();
     } else {
       const searchResults = await this.productRepository.search(query);
-      products = location 
-        ? searchResults.filter(p => p.location === location)
-        : searchResults;
+      if (location) {
+        // Filtrar por stock en la ubicación correspondiente
+        products = location === 'route'
+          ? searchResults.filter(p => p.stockRoute > 0)
+          : searchResults.filter(p => p.stockWarehouse > 0);
+      } else {
+        products = searchResults;
+      }
     }
     return products.sort((a, b) => a.name.localeCompare(b.name));
   }
@@ -63,7 +68,7 @@ export class ProductService implements IProductService {
     if (dto.price < 0) {
       throw new Error('El precio no puede ser negativo');
     }
-    if (dto.stock < 0) {
+    if (dto.stockWarehouse < 0 || dto.stockRoute < 0) {
       throw new Error('El stock no puede ser negativo');
     }
 
@@ -91,25 +96,30 @@ export class ProductService implements IProductService {
     if (dto.price !== undefined && dto.price < 0) {
       throw new Error('El precio no puede ser negativo');
     }
-    if (dto.stock !== undefined && dto.stock < 0) {
+    if ((dto.stockWarehouse !== undefined && dto.stockWarehouse < 0) || 
+        (dto.stockRoute !== undefined && dto.stockRoute < 0)) {
       throw new Error('El stock no puede ser negativo');
     }
 
     return this.productRepository.update(id, dto);
   }
 
-  async updateStock(id: string, quantity: number): Promise<Product | null> {
+  async updateStock(id: string, quantity: number, location: InventoryLocation = 'warehouse'): Promise<Product | null> {
     const product = await this.productRepository.getById(id);
     if (!product) {
       throw new Error('Producto no encontrado');
     }
 
-    const newStock = product.stock + quantity;
+    const currentStock = location === 'route' ? product.stockRoute : product.stockWarehouse;
+    const newStock = currentStock + quantity;
     if (newStock < 0) {
-      throw new Error(`Stock insuficiente. Stock actual: ${product.stock}, cantidad solicitada: ${Math.abs(quantity)}`);
+      throw new Error(`Stock insuficiente. Stock actual: ${currentStock}, cantidad solicitada: ${Math.abs(quantity)}`);
     }
 
-    return this.productRepository.update(id, { stock: newStock });
+    const updateData = location === 'route' 
+      ? { stockRoute: newStock }
+      : { stockWarehouse: newStock };
+    return this.productRepository.update(id, updateData);
   }
 
   async deleteProduct(id: string): Promise<boolean> {
@@ -126,9 +136,12 @@ export class ProductService implements IProductService {
 
     return {
       totalProducts: products.length,
-      lowStockProducts: products.filter(p => p.stock > 0 && p.stock < this.LOW_STOCK_THRESHOLD).length,
-      outOfStockProducts: products.filter(p => p.stock === 0).length,
-      totalValue: products.reduce((sum, p) => sum + (p.price * p.stock), 0),
+      lowStockProducts: products.filter(p => {
+        const totalStock = p.stockWarehouse + p.stockRoute;
+        return totalStock > 0 && totalStock < this.LOW_STOCK_THRESHOLD;
+      }).length,
+      outOfStockProducts: products.filter(p => p.stockWarehouse === 0 && p.stockRoute === 0).length,
+      totalValue: products.reduce((sum, p) => sum + (p.price * (p.stockWarehouse + p.stockRoute)), 0),
       categories,
     };
   }

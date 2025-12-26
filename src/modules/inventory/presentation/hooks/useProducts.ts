@@ -58,8 +58,8 @@ export function useProducts() {
     return updatedProduct;
   }, [productService, loadProducts]);
 
-  const updateStock = useCallback(async (id: string, quantity: number): Promise<Product | null> => {
-    const updatedProduct = await productService.updateStock(id, quantity);
+  const updateStock = useCallback(async (id: string, quantity: number, location?: InventoryLocation): Promise<Product | null> => {
+    const updatedProduct = await productService.updateStock(id, quantity, location);
     await loadProducts();
     return updatedProduct;
   }, [productService, loadProducts]);
@@ -70,7 +70,8 @@ export function useProducts() {
     return result;
   }, [productService, loadProducts]);
 
-  const getStockStatus = useCallback((stock: number) => {
+  const getStockStatus = useCallback((product: Product, location: InventoryLocation) => {
+    const stock = location === 'route' ? product.stockRoute : product.stockWarehouse;
     return productService.getStockStatus(stock);
   }, [productService]);
 

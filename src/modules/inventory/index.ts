@@ -1,5 +1,5 @@
 // Domain
-export type { Product, CreateProductDTO, UpdateProductDTO, StockStatus } from './domain/entities';
+export type { Product, CreateProductDTO, UpdateProductDTO, StockStatus, InventoryLocation } from './domain/entities';
 export type { IProductRepository } from './domain/repositories';
 
 // Application
@@ -12,4 +12,4 @@ export { InventoryContainer } from './infrastructure/container';
 
 // Presentation
 export { useProducts } from './presentation/hooks';
-export { ProductCard } from './presentation/components';
+export { ProductCard, InventoryTabs } from './presentation/components';

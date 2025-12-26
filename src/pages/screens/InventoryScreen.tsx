@@ -2,8 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { ScreenContainer } from '../components/ScreenContainer';
 import type { NavScreen } from '../components/BottomNav';
 import { Search } from 'lucide-react';
-import { useProducts, ProductCard } from '../../modules/inventory';
-import type { Product } from '../../modules/inventory';
+import { useProducts, ProductCard, InventoryTabs } from '../../modules/inventory';
+import type { Product, InventoryLocation } from '../../modules/inventory';
 
 interface InventoryScreenProps {
   onNavigate: (screen: NavScreen | 'profile') => void;
@@ -11,20 +11,17 @@ interface InventoryScreenProps {
 
 export const InventoryScreen: React.FC<InventoryScreenProps> = ({ onNavigate }) => {
   const [searchQuery, setSearchQuery] = useState('');
+  const [activeTab, setActiveTab] = useState<InventoryLocation>('route');
   const [filteredProducts, setFilteredProducts] = useState<Product[]>([]);
   const { products, loading, error, searchProducts, getStockStatus } = useProducts();
 
   useEffect(() => {
     const performSearch = async () => {
-      if (searchQuery.trim()) {
-        const results = await searchProducts(searchQuery);
-        setFilteredProducts(results);
-      } else {
-        setFilteredProducts(products);
-      }
+      const results = await searchProducts(searchQuery, activeTab);
+      setFilteredProducts(results);
     };
     performSearch();
-  }, [searchQuery, products, searchProducts]);
+  }, [searchQuery, activeTab, products, searchProducts]);
 
   return (
     <ScreenContainer
@@ -34,6 +31,9 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({ onNavigate }) 
     >
       <div className="p-6">
         <div className="max-w-[390px] sm:max-w-full mx-auto">
+          {/* Pestañas */}
+          <InventoryTabs activeTab={activeTab} onTabChange={setActiveTab} />
+
           {/* Búsqueda */}
           <div className="mb-6">
             <div className="relative">

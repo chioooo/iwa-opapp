@@ -1,6 +1,6 @@
 import type { IProductService, InventorySummary } from './IProductService';
 import type { IProductRepository } from '../../domain/repositories';
-import type { Product, CreateProductDTO, UpdateProductDTO, StockStatus } from '../../domain/entities';
+import type { Product, CreateProductDTO, UpdateProductDTO, StockStatus, InventoryLocation } from '../../domain/entities';
 
 /**
  * Product Service Implementation
@@ -33,11 +33,24 @@ export class ProductService implements IProductService {
     return this.productRepository.getByCategory(category);
   }
 
-  async searchProducts(query: string): Promise<Product[]> {
+  async getProductsByLocation(location: InventoryLocation): Promise<Product[]> {
+    const products = await this.productRepository.getByLocation(location);
+    return products.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  async searchProducts(query: string, location?: InventoryLocation): Promise<Product[]> {
+    let products: Product[];
     if (!query.trim()) {
-      return this.getAllProducts();
+      products = location 
+        ? await this.productRepository.getByLocation(location)
+        : await this.productRepository.getAll();
+    } else {
+      const searchResults = await this.productRepository.search(query);
+      products = location 
+        ? searchResults.filter(p => p.location === location)
+        : searchResults;
     }
-    return this.productRepository.search(query);
+    return products.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   async createProduct(dto: CreateProductDTO): Promise<Product> {

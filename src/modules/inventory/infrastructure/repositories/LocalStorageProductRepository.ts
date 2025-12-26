@@ -1,5 +1,5 @@
 import type { IProductRepository } from '../../domain/repositories';
-import type { Product, CreateProductDTO, UpdateProductDTO } from '../../domain/entities';
+import type { Product, CreateProductDTO, UpdateProductDTO, InventoryLocation } from '../../domain/entities';
 
 const STORAGE_KEY = 'iwa_products';
 
@@ -29,11 +29,11 @@ export class LocalStorageProductRepository implements IProductRepository {
   private initializeDefaultProducts(): void {
     const now = new Date().toISOString();
     const defaultProducts: Product[] = [
-      { id: 'product_1', name: 'Producto A', code: 'SKU-001', stock: 150, price: 25.50, category: 'Categoría 1', createdAt: now, updatedAt: now },
-      { id: 'product_2', name: 'Producto B', code: 'SKU-002', stock: 85, price: 42.00, category: 'Categoría 2', createdAt: now, updatedAt: now },
-      { id: 'product_3', name: 'Producto C', code: 'SKU-003', stock: 220, price: 18.75, category: 'Categoría 1', createdAt: now, updatedAt: now },
-      { id: 'product_4', name: 'Producto D', code: 'SKU-004', stock: 12, price: 95.00, category: 'Categoría 3', createdAt: now, updatedAt: now },
-      { id: 'product_5', name: 'Producto E', code: 'SKU-005', stock: 0, price: 33.25, category: 'Categoría 2', createdAt: now, updatedAt: now },
+      { id: 'product_1', name: 'Producto A', code: 'SKU-001', stock: 150, price: 25.50, category: 'Categoría 1', location: 'warehouse', createdAt: now, updatedAt: now },
+      { id: 'product_2', name: 'Producto B', code: 'SKU-002', stock: 85, price: 42.00, category: 'Categoría 2', location: 'warehouse', createdAt: now, updatedAt: now },
+      { id: 'product_3', name: 'Producto C', code: 'SKU-003', stock: 220, price: 18.75, category: 'Categoría 1', location: 'route', createdAt: now, updatedAt: now },
+      { id: 'product_4', name: 'Producto D', code: 'SKU-004', stock: 12, price: 95.00, category: 'Categoría 3', location: 'route', createdAt: now, updatedAt: now },
+      { id: 'product_5', name: 'Producto E', code: 'SKU-005', stock: 0, price: 33.25, category: 'Categoría 2', location: 'warehouse', createdAt: now, updatedAt: now },
     ];
     this.saveProducts(defaultProducts);
   }
@@ -57,6 +57,11 @@ export class LocalStorageProductRepository implements IProductRepository {
     return products.filter(product => product.category === category);
   }
 
+  async getByLocation(location: InventoryLocation): Promise<Product[]> {
+    const products = this.getProducts();
+    return products.filter(product => product.location === location);
+  }
+
   async search(query: string): Promise<Product[]> {
     const products = this.getProducts();
     const lowerQuery = query.toLowerCase();
@@ -78,6 +83,7 @@ export class LocalStorageProductRepository implements IProductRepository {
       stock: dto.stock,
       price: dto.price,
       category: dto.category,
+      location: dto.location,
       createdAt: now,
       updatedAt: now,
     };

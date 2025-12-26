@@ -1,5 +1,5 @@
 import { useState, useEffect, useCallback } from 'react';
-import type { Product, CreateProductDTO, UpdateProductDTO } from '../../domain/entities';
+import type { Product, CreateProductDTO, UpdateProductDTO, InventoryLocation } from '../../domain/entities';
 import type { InventorySummary } from '../../application/services';
 import { InventoryContainer } from '../../infrastructure/container';
 
@@ -28,11 +28,20 @@ export function useProducts() {
     }
   }, [productService]);
 
-  const searchProducts = useCallback(async (query: string): Promise<Product[]> => {
+  const searchProducts = useCallback(async (query: string, location?: InventoryLocation): Promise<Product[]> => {
     try {
-      return await productService.searchProducts(query);
+      return await productService.searchProducts(query, location);
     } catch (err) {
       console.error(`Error searching products with query "${query}":`, err);
+      return [];
+    }
+  }, [productService]);
+
+  const getProductsByLocation = useCallback(async (location: InventoryLocation): Promise<Product[]> => {
+    try {
+      return await productService.getProductsByLocation(location);
+    } catch (err) {
+      console.error(`Error getting products by location "${location}":`, err);
       return [];
     }
   }, [productService]);
@@ -75,6 +84,7 @@ export function useProducts() {
     loading,
     error,
     searchProducts,
+    getProductsByLocation,
     createProduct,
     updateProduct,
     updateStock,

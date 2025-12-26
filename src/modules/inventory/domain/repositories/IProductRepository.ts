@@ -1,4 +1,4 @@
-import type { Product, CreateProductDTO, UpdateProductDTO } from '../entities';
+import type { Product, CreateProductDTO, UpdateProductDTO, InventoryLocation } from '../entities';
 
 /**
  * Product Repository Interface
@@ -10,6 +10,7 @@ export interface IProductRepository {
   getById(id: string): Promise<Product | null>;
   getByCode(code: string): Promise<Product | null>;
   getByCategory(category: string): Promise<Product[]>;
+  getByLocation(location: InventoryLocation): Promise<Product[]>;
   search(query: string): Promise<Product[]>;
   create(dto: CreateProductDTO): Promise<Product>;
   update(id: string, dto: UpdateProductDTO): Promise<Product | null>;

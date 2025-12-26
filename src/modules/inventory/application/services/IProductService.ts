@@ -1,4 +1,4 @@
-import type { Product, CreateProductDTO, UpdateProductDTO, StockStatus } from '../../domain/entities';
+import type { Product, CreateProductDTO, UpdateProductDTO, StockStatus, InventoryLocation } from '../../domain/entities';
 
 export interface InventorySummary {
   totalProducts: number;
@@ -17,7 +17,8 @@ export interface IProductService {
   getProductById(id: string): Promise<Product | null>;
   getProductByCode(code: string): Promise<Product | null>;
   getProductsByCategory(category: string): Promise<Product[]>;
-  searchProducts(query: string): Promise<Product[]>;
+  getProductsByLocation(location: InventoryLocation): Promise<Product[]>;
+  searchProducts(query: string, location?: InventoryLocation): Promise<Product[]>;
   createProduct(dto: CreateProductDTO): Promise<Product>;
   updateProduct(id: string, dto: UpdateProductDTO): Promise<Product | null>;
   updateStock(id: string, quantity: number): Promise<Product | null>;

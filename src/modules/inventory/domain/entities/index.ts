@@ -1,1 +1,1 @@
-export type { Product, CreateProductDTO, UpdateProductDTO, StockStatus, InventoryLocation } from './Product';
+export type { Product, CreateProductDTO, UpdateProductDTO, StockStatus, InventoryLocation, UnitType, PendingDelivery } from './Product';

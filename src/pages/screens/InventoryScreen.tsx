@@ -3,7 +3,40 @@ import { ScreenContainer } from '../components/ScreenContainer';
 import type { NavScreen } from '../components/BottomNav';
 import { Search } from 'lucide-react';
 import { useProducts, ProductCard, InventoryTabs } from '../../modules/inventory';
-import type { Product, InventoryLocation } from '../../modules/inventory';
+import type { Product, InventoryLocation, PendingDelivery } from '../../modules/inventory';
+
+const MOCK_PENDING_DELIVERIES: Record<string, PendingDelivery[]> = {
+  'product_1': [
+    { clientName: 'La Esquina', quantity: 12 },
+    { clientName: 'Central', quantity: 24 },
+    { clientName: 'Don Pepe', quantity: 12 },
+  ],
+  'product_2': [
+    { clientName: 'Abarrotes Mary', quantity: 6 },
+    { clientName: 'La Esquina', quantity: 12 },
+  ],
+  'product_4': [
+    { clientName: 'Central', quantity: 20 },
+    { clientName: 'Tienda Lupita', quantity: 16 },
+  ],
+  'product_5': [
+    { clientName: 'Don Pepe', quantity: 30 },
+    { clientName: 'La Esquina', quantity: 20 },
+    { clientName: 'Central', quantity: 10 },
+  ],
+  'product_7': [
+    { clientName: 'Abarrotes Mary', quantity: 10 },
+    { clientName: 'Tienda Lupita', quantity: 8 },
+  ],
+  'product_10': [
+    { clientName: 'Central', quantity: 15 },
+    { clientName: 'Don Pepe', quantity: 15 },
+  ],
+  'product_12': [
+    { clientName: 'La Esquina', quantity: 6 },
+    { clientName: 'Abarrotes Mary', quantity: 6 },
+  ],
+};
 
 interface InventoryScreenProps {
   onNavigate: (screen: NavScreen | 'profile') => void;
@@ -71,6 +104,7 @@ export const InventoryScreen: React.FC<InventoryScreenProps> = ({ onNavigate }) 
                   product={product}
                   stockStatus={getStockStatus(product, activeTab)}
                   location={activeTab}
+                  pendingDeliveries={MOCK_PENDING_DELIVERIES[product.id]}
                 />
               ))}
             </div>

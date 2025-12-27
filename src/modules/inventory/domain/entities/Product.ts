@@ -1,5 +1,11 @@
 export type StockStatus = 'available' | 'low' | 'out_of_stock';
 export type InventoryLocation = 'route' | 'warehouse';
+export type UnitType = 'pza' | 'pack' | 'kg' | 'lt' | 'caja' | 'bolsa';
+
+export interface PendingDelivery {
+  clientName: string;
+  quantity: number;
+}
 
 export interface Product {
   id: string;
@@ -9,6 +15,8 @@ export interface Product {
   stockRoute: number;
   price: number;
   category: string;
+  unitType: UnitType;
+  unitQuantity?: number; // e.g., 12 for "pack 12 pzs"
   createdAt: string;
   updatedAt: string;
 }
@@ -20,6 +28,8 @@ export interface CreateProductDTO {
   stockRoute: number;
   price: number;
   category: string;
+  unitType: UnitType;
+  unitQuantity?: number;
 }
 
 export interface UpdateProductDTO {
@@ -29,4 +39,6 @@ export interface UpdateProductDTO {
   stockRoute?: number;
   price?: number;
   category?: string;
+  unitType?: UnitType;
+  unitQuantity?: number;
 }
